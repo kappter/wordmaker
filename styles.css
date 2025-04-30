@@ -17,11 +17,11 @@ body {
     transform: scale(1.02);
 }
 
-.generate-btn {
+.generate-btn, .copy-btn {
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.generate-btn:hover {
+.generate-btn:hover, .copy-btn:hover {
     transform: scale(1.05);
 }
 

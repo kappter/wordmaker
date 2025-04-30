@@ -61,6 +61,7 @@ const pronunciation = document.getElementById('pronunciation');
 const wordDefinition = document.getElementById('wordDefinition');
 const permutationList = document.getElementById('permutationList');
 const generateButton = document.getElementById('generateButton');
+const copyButton = document.getElementById('copyButton');
 const permutationType = document.getElementById('permutationType');
 
 // Simplified pronunciation generator
@@ -71,32 +72,55 @@ function generatePronunciation(word) {
     return `\\${syllables.join(' - ')}\\`;
 }
 
-// Improved definition generator for sentence-like output
-function generateSentenceDefinition(type, preDef, rootDef1, rootDef2, sufDef) {
+// Determine part of speech based on suffix or word type
+function getPartOfSpeech(type, suffixIndex) {
+    if (type === 'pre-root' || type === 'pre-root-root' || type === 'root') {
+        return 'noun';
+    }
+    if (suffixIndex === -1) {
+        return 'noun';
+    }
+    const suffix = suffixes[suffixIndex];
+    if (['ly'].includes(suffix)) return 'adverb';
+    if (['ize'].includes(suffix)) return 'verb';
+    if (['ous', 'al', 'an', 'ile', 'ic', 'esque', 'ful', 'ious'].includes(suffix)) return 'adjective';
+    return 'noun'; // Default for -ology, -ity, -ess, -ist, etc.
+}
+
+// Improved definition generator with part of speech
+function generateSentenceDefinition(type, preDef, rootDef1, rootDef2, sufDef, suffixIndex) {
+    let definition;
     switch (type) {
         case 'pre-root-suf':
-            if (sufDef.includes('study of')) return `The study of things that are ${preDef} ${rootDef1}.`;
-            if (sufDef.includes('fear of')) return `A fear of things that are ${preDef} ${rootDef1}.`;
-            if (sufDef.includes('love for')) return `A love for things that are ${preDef} ${rootDef1}.`;
-            if (sufDef.includes('person who')) return `A person who deals with things that are ${preDef} ${rootDef1}.`;
-            if (sufDef.includes('in the manner of')) return `Doing something in a way that is ${preDef} ${rootDef1}.`;
-            return `The quality of being ${preDef} ${rootDef1}.`;
+            if (sufDef.includes('study of')) definition = `The study of things that are ${preDef} ${rootDef1}`;
+            else if (sufDef.includes('fear of')) definition = `A fear of things that are ${preDef} ${rootDef1}`;
+            else if (sufDef.includes('love for')) definition = `A love for things that are ${preDef} ${rootDef1}`;
+            else if (sufDef.includes('person who')) definition = `A person who deals with things that are ${preDef} ${rootDef1}`;
+            else if (sufDef.includes('in the manner of')) definition = `Doing something in a way that is ${preDef} ${rootDef1}`;
+            else definition = `The quality of being ${preDef} ${rootDef1}`;
+            break;
         case 'root-suf':
-            if (sufDef.includes('study of')) return `The study of ${rootDef1}.`;
-            if (sufDef.includes('fear of')) return `A fear of ${rootDef1}.`;
-            if (sufDef.includes('love for')) return `A love for ${rootDef1}.`;
-            if (sufDef.includes('person who')) return `A person who specializes in ${rootDef1}.`;
-            if (sufDef.includes('in the manner of')) return `Acting in the manner of ${rootDef1}.`;
-            return `The quality or state of ${rootDef1}.`;
+            if (sufDef.includes('study of')) definition = `The study of ${rootDef1}`;
+            else if (sufDef.includes('fear of')) definition = `A fear of ${rootDef1}`;
+            else if (sufDef.includes('love for')) definition = `A love for ${rootDef1}`;
+            else if (sufDef.includes('person who')) definition = `A person who specializes in ${rootDef1}`;
+            else if (sufDef.includes('in the manner of')) definition = `Acting in the manner of ${rootDef1}`;
+            else definition = `The quality or state of ${rootDef1}`;
+            break;
         case 'pre-root':
-            return `Something that is ${preDef} ${rootDef1}.`;
+            definition = `Something that is ${preDef} ${rootDef1}`;
+            break;
         case 'pre-root-root':
-            return `Something that combines being ${preDef} both ${rootDef1} and ${rootDef2}.`;
+            definition = `Something that combines being ${preDef} both ${rootDef1} and ${rootDef2}`;
+            break;
         case 'root':
-            return `The concept of ${rootDef1}.`;
+            definition = `The concept of ${rootDef1}`;
+            break;
         default:
-            return `The quality of being ${preDef} ${rootDef1}.`;
+            definition = `The quality of being ${preDef} ${rootDef1}`;
     }
+    const partOfSpeech = getPartOfSpeech(type, suffixIndex);
+    return `${definition} (${partOfSpeech})`;
 }
 
 function generateWordAndDefinition(type) {
@@ -109,27 +133,27 @@ function generateWordAndDefinition(type) {
     switch (type) {
         case 'pre-root-suf':
             word = `${prefixes[x]}-${roots[y]}-${suffixes[z]}`;
-            def = generateSentenceDefinition(type, prefixDefs[x], rootDefs[y], null, suffixDefs[z]);
+            def = generateSentenceDefinition(type, prefixDefs[x], rootDefs[y], null, suffixDefs[z], z);
             break;
         case 'root-suf':
             word = `${roots[y]}-${suffixes[z]}`;
-            def = generateSentenceDefinition(type, null, rootDefs[y], null, suffixDefs[z]);
+            def = generateSentenceDefinition(type, null, rootDefs[y], null, suffixDefs[z], z);
             break;
         case 'pre-root':
             word = `${prefixes[x]}-${roots[y]}`;
-            def = generateSentenceDefinition(type, prefixDefs[x], rootDefs[y], null, null);
+            def = generateSentenceDefinition(type, prefixDefs[x], rootDefs[y], null, null, -1);
             break;
         case 'pre-root-root':
             word = `${prefixes[x]}-${roots[y]}-${roots[y2]}`;
-            def = generateSentenceDefinition(type, prefixDefs[x], rootDefs[y], rootDefs[y2], null);
+            def = generateSentenceDefinition(type, prefixDefs[x], rootDefs[y], rootDefs[y2], null, -1);
             break;
         case 'root':
             word = roots[y];
-            def = generateSentenceDefinition(type, null, rootDefs[y], null, null);
+            def = generateSentenceDefinition(type, null, rootDefs[y], null, null, -1);
             break;
         default:
             word = `${prefixes[x]}-${roots[y]}-${suffixes[z]}`;
-            def = generateSentenceDefinition(type, prefixDefs[x], rootDefs[y], null, suffixDefs[z]);
+            def = generateSentenceDefinition(type, prefixDefs[x], rootDefs[y], null, suffixDefs[z], z);
     }
 
     return { word, def, x, y, z, y2 };
@@ -147,6 +171,20 @@ function generatePermutations(x, y, z, y2, currentType) {
     });
 
     return permutations;
+}
+
+function copyToClipboard() {
+    const word = generatedWord.textContent;
+    const pron = pronunciation.textContent;
+    const def = wordDefinition.textContent;
+    const textToCopy = `${word}\n${pron}\n${def}`;
+    
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        alert('Word, pronunciation, and definition copied to clipboard!');
+    }).catch(err => {
+        console.error('Failed to copy: ', err);
+        alert('Failed to copy to clipboard.');
+    });
 }
 
 function updateDisplay() {
@@ -169,6 +207,7 @@ function updateDisplay() {
 }
 
 generateButton.addEventListener('click', updateDisplay);
+copyButton.addEventListener('click', copyToClipboard);
 permutationType.addEventListener('change', updateDisplay);
 
 // Generate a word on page load
