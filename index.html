@@ -47,11 +47,26 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container mx-auto p-6 max-w-lg text-center">
+    <div class="container mx-auto p-6 max-w-2xl text-center">
         <h1 class="text-4xl font-bold text-cyan-800 mb-6">Word Creator</h1>
-        <div id="wordContainer" class="word-container bg-white shadow-lg rounded-lg p-8 mb-6">
-            <h2 id="generatedWord" class="text-3xl font-semibold text-cyan-600 mb-4">Click to Generate a Word!</h2>
-            <p id="wordDefinition" class="text-lg text-gray-700">Your word's definition will appear here.</p>
+        <div class="mb-6">
+            <label for="permutationType" class="text-lg text-cyan-700 mr-2">Select Word Type:</label>
+            <select id="permutationType" class="border border-cyan-300 rounded-md p-2 text-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-400">
+                <option value="pre-root-suf">Prefix-Root-Suffix</option>
+                <option value="root-suf">Root-Suffix</option>
+                <option value="pre-root">Prefix-Root</option>
+                <option value="pre-root-root">Prefix-Root-Root</option>
+                <option value="root">Root Only</option>
+            </select>
+        </div>
+        <div id="wordContainer" class="word-container bg-white shadow-lg rounded-lg p-8 mb-6 text-left">
+            <h2 id="generatedWord" class="text-3xl font-semibold text-cyan-600 mb-2">Click to Generate a Word!</h2>
+            <p id="pronunciation" class="text-sm italic text-gray-600 mb-4">Pronunciation will appear here.</p>
+            <p id="wordDefinition" class="text-lg text-gray-700 mb-4">Your word's definition will appear here.</p>
+            <div id="permutations" class="text-gray-700">
+                <h3 class="text-lg font-semibold text-cyan-600 mb-2">Other Forms:</h3>
+                <ul id="permutationList" class="list-disc pl-5"></ul>
+            </div>
         </div>
         <button id="generateButton" class="generate-btn bg-cyan-500 text-white font-bold py-3 px-6 rounded-full hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan-400">
             Generate New Word

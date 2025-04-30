@@ -8,28 +8,91 @@ const suffixDefs = ["like or in the manner of", "the study of", "to hold on to",
 
 const wordContainer = document.getElementById('wordContainer');
 const generatedWord = document.getElementById('generatedWord');
+const pronunciation = document.getElementById('pronunciation');
 const wordDefinition = document.getElementById('wordDefinition');
+const permutationList = document.getElementById('permutationList');
 const generateButton = document.getElementById('generateButton');
+const permutationType = document.getElementById('permutationType');
 
-function generateRandomWord() {
-    const x = Math.floor(Math.random() * prefixes.length);
-    const y = Math.floor(Math.random() * roots.length);
-    const z = Math.floor(Math.random() * suffixes.length);
+// Simplified pronunciation generator
+function generatePronunciation(word) {
+    const syllables = word.split('-').map(part => {
+        return part.replace(/[aeiou]/gi, match => `_${match}_`).replace(/([bcdfghjklmnpqrstvwxyz]+)/gi, '$1');
+    });
+    return `\\${syllables.join(' - ')}\\`;
+}
 
-    const newWord = `${prefixes[x]}-${roots[y]}-${suffixes[z]}`;
-    const definition = `${suffixDefs[z]} ${prefixDefs[x]} ${rootDefs[y]}`;
+function generateWordAndDefinition(type) {
+    let word, def, x, y, z, y2;
+    x = Math.floor(Math.random() * prefixes.length);
+    y = Math.floor(Math.random() * roots.length);
+    z = Math.floor(Math.random() * suffixes.length);
+    y2 = Math.floor(Math.random() * roots.length);
 
-    generatedWord.textContent = newWord;
-    wordDefinition.textContent = definition;
+    switch (type) {
+        case 'pre-root-suf':
+            word = `${prefixes[x]}-${roots[y]}-${suffixes[z]}`;
+            def = `${suffixDefs[z]} ${prefixDefs[x]} ${rootDefs[y]}`;
+            break;
+        case 'root-suf':
+            word = `${roots[y]}-${suffixes[z]}`;
+            def = `${suffixDefs[z]} ${rootDefs[y]}`;
+            break;
+        case 'pre-root':
+            word = `${prefixes[x]}-${roots[y]}`;
+            def = `${prefixDefs[x]} ${rootDefs[y]}`;
+            break;
+        case 'pre-root-root':
+            word = `${prefixes[x]}-${roots[y]}-${roots[y2]}`;
+            def = `${prefixDefs[x]} ${rootDefs[y]} and ${rootDefs[y2]}`;
+            break;
+        case 'root':
+            word = roots[y];
+            def = rootDefs[y];
+            break;
+        default:
+            word = `${prefixes[x]}-${roots[y]}-${suffixes[z]}`;
+            def = `${suffixDefs[z]} ${prefixDefs[x]} ${rootDefs[y]}`;
+    }
 
-    // Add a simple animation
+    return { word, def, x, y, z, y2 };
+}
+
+function generatePermutations(x, y, z, y2, currentType) {
+    const permutations = [];
+    const types = ['pre-root-suf', 'root-suf', 'pre-root', 'pre-root-root', 'root'];
+    
+    types.forEach(type => {
+        if (type !== currentType) {
+            const { word, def } = generateWordAndDefinition(type, x, y, z, y2);
+            permutations.push(`<strong>${word}</strong>: ${def}`);
+        }
+    });
+
+    return permutations;
+}
+
+function updateDisplay() {
+    const type = permutationType.value;
+    const { word, def, x, y, z, y2 } = generateWordAndDefinition(type);
+
+    generatedWord.textContent = word;
+    pronunciation.textContent = generatePronunciation(word);
+    wordDefinition.textContent = def;
+
+    // Generate permutations
+    const permutations = generatePermutations(x, y, z, y2, type);
+    permutationList.innerHTML = permutations.map(p => `<li>${p}</li>`).join('');
+
+    // Add animation
     wordContainer.style.opacity = '0';
     setTimeout(() => {
         wordContainer.style.opacity = '1';
     }, 100);
 }
 
-generateButton.addEventListener('click', generateRandomWord);
+generateButton.addEventListener('click', updateDisplay);
+permutationType.addEventListener('change', updateDisplay);
 
 // Generate a word on page load
-generateRandomWord();
+updateDisplay();
