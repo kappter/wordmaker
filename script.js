@@ -9,7 +9,8 @@ const roots = [
     "jud", "scrib", "therm", "nerd", "violin", "gross", "glass", "god", "pork", "grump", 
     "death", "happy", "joy", "peril", "human", "fish", "medical", "mainiac", "short", 
     "witch", "ginger", "lum", "spec", "cred", "viv", "aqua", "terr", "magn", "flor", 
-    "stell"
+    "stell", "vent", "clast", "saur", "omni", "crypt", "zest", "nimb", "glint", "rhyth", 
+    "spire"
 ];
 const suffixes = [
     "ly", "ology", "tain", "ous", "ity", "ess", "al", "an", "ile", "osis", 
@@ -41,7 +42,10 @@ const rootDefs = [
     "mystic or sorceress with red hair", "red-haired human, possibly a witch", 
     "light or glow", "looking or seeing", "belief or trust", "life or living", 
     "water or liquid", "earth or land", "great or large", "flowers or plants", 
-    "stars or celestial bodies"
+    "stars or celestial bodies", "wind or air", "breaking or shattering", 
+    "lizards or dinosaurs", "all or everything", "hidden or secret things", 
+    "energy or enthusiasm", "clouds or swift movement", "sparkle or shine", 
+    "patterns or beats", "breath or inspiration"
 ];
 const suffixDefs = [
     "in the manner of", "the study of", "holding or maintaining", "full of", 
