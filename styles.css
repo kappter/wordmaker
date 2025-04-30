@@ -36,12 +36,22 @@ body {
     color: #4b5563;
 }
 
+#wordDefinition {
+    font-size: 1.125rem;
+    color: #1f2937;
+}
+
 #wordDefinition::before {
-    content: "Definition: ";
-    font-weight: bold;
-    color: #164e63;
+    content: ""; /* Removed "Definition: " to avoid redundancy */
 }
 
 #permutationList li {
     margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+#permutations h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #164e63;
 }

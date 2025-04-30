@@ -87,7 +87,7 @@ function getPartOfSpeech(type, suffixIndex) {
     return 'noun'; // Default for -ology, -ity, -ess, -ist, etc.
 }
 
-// Improved definition generator with part of speech
+// Improved definition generator with part of speech first
 function generateSentenceDefinition(type, preDef, rootDef1, rootDef2, sufDef, suffixIndex) {
     let definition;
     switch (type) {
@@ -120,7 +120,7 @@ function generateSentenceDefinition(type, preDef, rootDef1, rootDef2, sufDef, su
             definition = `The quality of being ${preDef} ${rootDef1}`;
     }
     const partOfSpeech = getPartOfSpeech(type, suffixIndex);
-    return `${definition} (${partOfSpeech})`;
+    return `${partOfSpeech.charAt(0).toUpperCase() + partOfSpeech.slice(1)}: ${definition}`;
 }
 
 function generateWordAndDefinition(type) {
