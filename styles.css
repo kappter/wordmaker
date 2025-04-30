@@ -1,5 +1,5 @@
 body {
-    background: linear-gradient(to bottom right, #e0f7fa, #b2ebf2);
+    background: linear-gradient(to bottom right, #f5f5dc, #d2b48c);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -14,8 +14,8 @@ body {
 
 .word-container {
     transition: transform 0.3s ease, opacity 0.3s ease;
-    border-left: 4px solid #0891b2;
-    background-color: #f8fafc;
+    border-left: 4px solid #8b4513;
+    background-color: #fff8e1;
 }
 
 .word-container:hover {
@@ -38,12 +38,12 @@ body {
 
 #pronunciation {
     font-style: italic;
-    color: #4b5563;
+    color: #5c4033;
 }
 
 #wordDefinition {
     font-size: 1.125rem;
-    color: #1f2937;
+    color: #3c2f2f;
 }
 
 #wordDefinition::before {
@@ -58,13 +58,13 @@ body {
 #permutations h3 {
     font-size: 1.25rem;
     font-weight: 600;
-    color: #164e63;
+    color: #8b4513;
 }
 
 footer {
     font-size: 0.875rem;
-    color: #4b5563;
-    border-top: 1px solid #cbd5e1;
+    color: #5c4033;
+    border-top: 1px solid #d2b48c;
     width: 100%;
-    background-color: #f8fafc;
+    background-color: #fff8e1;
 }

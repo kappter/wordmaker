@@ -1,8 +1,8 @@
 const prefixes = [
     "un", "anti", "inter", "intra", "exter", "extra", "non", "iso", "ped", "mani", 
     "bi", "pre", "phon", "octo", "pyro", "derm", "hyper", "hypo", "pro", "opti", 
-    "post", "path *", "path", "mid", "auto", "hetero", "en", "trans", "sub", "super", 
-    "aero", "geo", "chrono"
+    "post", "path", "mid", "auto", "hetero", "en", "trans", "sub", "super", "aero", 
+    "geo", "chrono"
 ];
 const roots = [
     "fract", "aud", "dict", "ject", "mater", "mal", "mort", "voc", "phil", "aut", 
@@ -19,7 +19,7 @@ const suffixes = [
 
 const prefixDefs = [
     "the opposite of", "against", "between or among", "on the inside or within", 
-    "on the outside of or far8243away from", "beyond or more than", "not", "equal", 
+    "on the outside of or far away from", "beyond or more than", "not", "equal", 
     "relating to feet", "relating to the hands", "twice or two", "before or prior to", 
     "sound or voice", "eight", "fire and or heat", "relating to the skin", 
     "over or excessively", "beneath or below", "acceptance or for, not against", 
