@@ -19,44 +19,27 @@ const suffixes = [
 ];
 
 const prefixDefs = [
-    "the opposite of", "against", "between or among", "on the inside or within", 
-    "on the outside of or far away from", "beyond or more than", "not", "equal", 
-    "relating to feet", "relating to the hands", "twice or two", "before or prior to", 
-    "sound or voice", "eight", "fire and or heat", "relating to the skin", 
-    "over or excessively", "beneath or below", "acceptance or for, not against", 
-    "sight", "after", "feeling or disease", "halfway, or in the middle of", 
-    "about one self", "different or other", "within", "across or through", 
-    "under or below", "above or beyond", "relating to air", "relating to earth", 
-    "relating to time"
+    "not", "against", "between", "within", "outside", "beyond", "not", "equal", 
+    "feet", "hands", "two", "before", "sound", "eight", "fire", "skin", 
+    "excessive", "below", "for", "sight", "after", "feeling", "middle", 
+    "self", "different", "in", "across", "under", "above", "air", 
+    "earth", "time"
 ];
 const rootDefs = [
-    "breaking", "hearing", "saying or telling", "throwing", "mother or origin", 
-    "bad or harmful", "death", "voice or calling", "love or affection", 
-    "many or multiple", "judgment or law", "writing", "heat or warmth", 
-    "smart people with acne and glasses", "high-pitched squeaky string instruments", 
-    "yucky or unappealing", "transparent substances made from melted sand", 
-    "omnipotent being", "tasty food from a pig", "downers or narcissists", 
-    "ceasing to live", "joyful feelings", "happy and fuzzy feelings", 
-    "dangerous situations", "hairless apes with social media", "scaly sea creatures", 
-    "medicine and doctors", "crazy or insane beings", "being small in height", 
-    "mystic or sorceress with red hair", "red-haired human, possibly a witch", 
-    "light or glow", "looking or seeing", "belief or trust", "life or living", 
-    "water or liquid", "earth or land", "great or large", "flowers or plants", 
-    "stars or celestial bodies", "wind or air", "breaking or shattering", 
-    "lizards or dinosaurs", "all or everything", "hidden or secret things", 
-    "energy or enthusiasm", "clouds or swift movement", "sparkle or shine", 
-    "patterns or beats", "breath or inspiration"
+    "breaking", "hearing", "speaking", "throwing", "mother", "harm", "death", 
+    "voice", "love", "many", "judgment", "writing", "heat", "geeks", "violins", 
+    "disgust", "glass", "deity", "pork", "grumpiness", "death", "happiness", 
+    "joy", "danger", "humans", "fish", "medicine", "insanity", "shortness", 
+    "witches", "redheads", "light", "vision", "belief", "life", "water", 
+    "land", "greatness", "flowers", "stars", "wind", "shattering", "dinosaurs", 
+    "everything", "secrets", "energy", "clouds", "sparkle", "rhythm", "breath"
 ];
 const suffixDefs = [
-    "in the manner of", "the study of", "holding or maintaining", "full of", 
-    "the quality or state of", "a female who", "relating to or characterized by", 
-    "belonging to", "capable of", "disease or condition", "something that decomposes", 
-    "fear of", "love for", "the action of", "the most or greatest", 
-    "a person who specializes in", "resembling or like", "the result or act of", 
-    "a follower or resident of", "possessing the quality of", "to make or become", 
-    "the process or result of", "pertaining to", "the act or result of", 
-    "the state or quality of", "a place for", "resembling or styled like", 
-    "full of or characterized by"
+    "in a manner", "study of", "holding", "full of", "quality", "female", 
+    "related to", "of", "capable", "disease", "decomposition", "fear", "love", 
+    "action", "most", "specialist", "like", "result", "resident", "having", 
+    "to make", "process", "pertaining to", "act", "state", "place", "styled", 
+    "abundant"
 ];
 
 const wordContainer = document.getElementById('wordContainer');
@@ -88,42 +71,125 @@ function getPartOfSpeech(type, suffixIndex) {
     if (['ly'].includes(suffix)) return 'adverb';
     if (['ize'].includes(suffix)) return 'verb';
     if (['ous', 'al', 'an', 'ile', 'ic', 'esque', 'ful', 'ious'].includes(suffix)) return 'adjective';
-    return 'noun'; // Default for -ology, -ity, -ess, -ist, etc.
+    return 'noun';
 }
 
-// Improved definition generator with part of speech first
+// Enhanced definition generator with natural language
 function generateSentenceDefinition(type, preDef, rootDef1, rootDef2, sufDef, suffixIndex) {
-    let definition;
+    let definition = '';
+    const partOfSpeech = getPartOfSpeech(type, suffixIndex);
+
+    // Helper to combine prefix and root naturally
+    const combinePreRoot = (pre, root) => {
+        if (!pre) return root;
+        switch (pre) {
+            case 'not': return `non-${root}`;
+            case 'against': return `opposing ${root}`;
+            case 'between': return `shared ${root}`;
+            case 'within': return `internal ${root}`;
+            case 'outside': return `external ${root}`;
+            case 'beyond': return `extra ${root}`;
+            case 'equal': return `balanced ${root}`;
+            case 'before': return `pre-${root}`;
+            case 'after': return `post-${root}`;
+            case 'excessive': return `overly ${root}`;
+            case 'below': return `under ${root}`;
+            case 'for': return `supporting ${root}`;
+            case 'middle': return `mid-${root}`;
+            case 'self': return `self-${root}`;
+            case 'different': return `unique ${root}`;
+            case 'in': return `inner ${root}`;
+            case 'across': return `trans-${root}`;
+            case 'under': return `sub-${root}`;
+            case 'above': return `super-${root}`;
+            default: return `${pre}-${root}`;
+        }
+    };
+
+    // Normalize root for grammatical correctness
+    const normalizeRoot = (root) => {
+        if (root.endsWith('ing') || root.endsWith('s')) return root;
+        return root.replace(/ness$|ty$|ment$/, '');
+    };
+
     switch (type) {
         case 'pre-root-suf':
-            if (sufDef.includes('study of')) definition = `The study of things that are ${preDef} ${rootDef1}`;
-            else if (sufDef.includes('fear of')) definition = `A fear of things that are ${preDef} ${rootDef1}`;
-            else if (sufDef.includes('love for')) definition = `A love for things that are ${preDef} ${rootDef1}`;
-            else if (sufDef.includes('person who')) definition = `A person who deals with things that are ${preDef} ${rootDef1}`;
-            else if (sufDef.includes('in the manner of')) definition = `Doing something in a way that is ${preDef} ${rootDef1}`;
-            else definition = `The quality of being ${preDef} ${rootDef1}`;
+            const preRoot = combinePreRoot(preDef, normalizeRoot(rootDef1));
+            switch (sufDef) {
+                case 'study of': definition = `The study of ${preRoot}`; break;
+                case 'fear': definition = `Fear of ${preRoot}`; break;
+                case 'love': definition = `Love for ${preRoot}`; break;
+                case 'specialist': definition = `A specialist in ${preRoot}`; break;
+                case 'in a manner': definition = `In a ${preRoot} manner`; break;
+                case 'full of': definition = `Full of ${preRoot}`; break;
+                case 'quality': definition = `The quality of ${preRoot}`; break;
+                case 'to make': definition = `To cause ${preRoot}`; break;
+                case 'process': definition = `The process of ${preRoot}`; break;
+                case 'action': definition = `The act of ${preRoot}`; break;
+                case 'state': definition = `The state of ${preRoot}`; break;
+                case 'place': definition = `A place for ${preRoot}`; break;
+                case 'like': definition = `Resembling ${preRoot}`; break;
+                case 'abundant': definition = `Abounding in ${preRoot}`; break;
+                case 'related to': definition = `Related to ${preRoot}`; break;
+                case 'pertaining to': definition = `Pertaining to ${preRoot}`; break;
+                case 'holding': definition = `The holding of ${preRoot}`; break;
+                case 'female': definition = `A female associated with ${preRoot}`; break;
+                case 'of': definition = `Belonging to ${preRoot}`; break;
+                case 'capable': definition = `Capable of ${preRoot}`; break;
+                case 'disease': definition = `A disease involving ${preRoot}`; break;
+                case 'decomposition': definition = `Something that decomposes ${preRoot}`; break;
+                case 'resident': definition = `A resident of ${preRoot}`; break;
+                case 'having': definition = `Having ${preRoot}`; break;
+                case 'act': definition = `The act of ${preRoot}`; break;
+                case 'styled': definition = `Styled like ${preRoot}`; break;
+                default: definition = `Something involving ${preRoot}`;
+            }
             break;
         case 'root-suf':
-            if (sufDef.includes('study of')) definition = `The study of ${rootDef1}`;
-            else if (sufDef.includes('fear of')) definition = `A fear of ${rootDef1}`;
-            else if (sufDef.includes('love for')) definition = `A love for ${rootDef1}`;
-            else if (sufDef.includes('person who')) definition = `A person who specializes in ${rootDef1}`;
-            else if (sufDef.includes('in the manner of')) definition = `Acting in the manner of ${rootDef1}`;
-            else definition = `The quality or state of ${rootDef1}`;
+            const root = normalizeRoot(rootDef1);
+            switch (sufDef) {
+                case 'study of': definition = `The study of ${root}`; break;
+                case 'fear': definition = `Fear of ${root}`; break;
+                case 'love': definition = `Love for ${root}`; break;
+                case 'specialist': definition = `A specialist in ${root}`; break;
+                case 'in a manner': definition = `In a ${root} manner`; break;
+                case 'full of': definition = `Full of ${root}`; break;
+                case 'quality': definition = `The quality of ${root}`; break;
+                case 'to make': definition = `To cause ${root}`; break;
+                case 'process': definition = `The process of ${root}`; break;
+                case 'action': definition = `The act of ${root}`; break;
+                case 'state': definition = `The state of ${root}`; break;
+                case 'place': definition = `A place for ${root}`; break;
+                case 'like': definition = `Resembling ${root}`; break;
+                case 'abundant': definition = `Abounding in ${root}`; break;
+                case 'related to': definition = `Related to ${root}`; break;
+                case 'pertaining to': definition = `Pertaining to ${root}`; break;
+                case 'holding': definition = `The holding of ${root}`; break;
+                case 'female': definition = `A female associated with ${root}`; break;
+                case 'of': definition = `Belonging to ${root}`; break;
+                case 'capable': definition = `Capable of ${root}`; break;
+                case 'disease': definition = `A disease involving ${root}`; break;
+                case 'decomposition': definition = `Something that decomposes ${root}`; break;
+                case 'resident': definition = `A resident of ${root}`; break;
+                case 'having': definition = `Having ${root}`; break;
+                case 'act': definition = `The act of ${root}`; break;
+                case 'styled': definition = `Styled like ${root}`; break;
+                default: definition = `Something involving ${root}`;
+            }
             break;
         case 'pre-root':
-            definition = `Something that is ${preDef} ${rootDef1}`;
+            definition = `Something that is ${combinePreRoot(preDef, normalizeRoot(rootDef1))}`;
             break;
         case 'pre-root-root':
-            definition = `Something that combines being ${preDef} both ${rootDef1} and ${rootDef2}`;
+            definition = `Something combining ${combinePreRoot(preDef, normalizeRoot(rootDef1))} and ${normalizeRoot(rootDef2)}`;
             break;
         case 'root':
-            definition = `The concept of ${rootDef1}`;
+            definition = `The concept of ${normalizeRoot(rootDef1)}`;
             break;
         default:
-            definition = `The quality of being ${preDef} ${rootDef1}`;
+            definition = `Something involving ${combinePreRoot(preDef, normalizeRoot(rootDef1))}`;
     }
-    const partOfSpeech = getPartOfSpeech(type, suffixIndex);
+
     return `${partOfSpeech.charAt(0).toUpperCase() + partOfSpeech.slice(1)}: ${definition}`;
 }
 
