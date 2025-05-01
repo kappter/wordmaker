@@ -30,12 +30,16 @@ function parseCSV(csvText) {
 // Function to load and organize data from word_parts.csv
 async function loadWordParts() {
     try {
+        console.log('Fetching word_parts.csv...');
         const response = await fetch('data/word_parts.csv');
+        console.log('Fetch Response:', response);
         if (!response.ok) {
-            throw new Error('Failed to load word_parts.csv');
+            throw new Error(`Failed to load word_parts.csv: ${response.status} ${response.statusText}`);
         }
         const csvText = await response.text();
+        console.log('CSV Text:', csvText);
         const data = parseCSV(csvText);
+        console.log('Parsed Data:', data);
 
         // Clear existing theme data
         Object.keys(themes).forEach(theme => {
@@ -60,11 +64,18 @@ async function loadWordParts() {
                     themes[type].suffixes.push(term);
                     themes[type].suffixDefs.push(definition);
                 }
+            } else {
+                console.warn(`Unknown theme type: ${type}`);
             }
         });
 
         // Validate that all themes have data
         Object.keys(themes).forEach(theme => {
+            console.log(`Theme ${theme}:`, {
+                prefixes: themes[theme].prefixes.length,
+                roots: themes[theme].roots.length,
+                suffixes: themes[theme].suffixes.length
+            });
             if (!themes[theme].prefixes.length || !themes[theme].roots.length || !themes[theme].suffixes.length) {
                 console.warn(`Theme ${theme} is missing some word parts.`);
             }
