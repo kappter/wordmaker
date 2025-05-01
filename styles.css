@@ -12,13 +12,13 @@ body {
     flex: 1;
 }
 
-.word-container {
+#wordContainer {
     transition: transform 0.3s ease, opacity 0.3s ease;
     border-left: 4px solid #8b4513;
     background-color: #fff8e1;
 }
 
-.word-container:hover {
+#wordContainer:hover {
     transform: scale(1.02);
 }
 
