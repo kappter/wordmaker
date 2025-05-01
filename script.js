@@ -4,7 +4,8 @@ const themes = {
     technical: { prefixes: [], prefixDefs: [], roots: [], rootDefs: [], suffixes: [], suffixDefs: [] },
     shakespearian: { prefixes: [], prefixDefs: [], roots: [], rootDefs: [], suffixes: [], suffixDefs: [] },
     popculture: { prefixes: [], prefixDefs: [], roots: [], rootDefs: [], suffixes: [], suffixDefs: [] },
-    astronomy: { prefixes: [], prefixDefs: [], roots: [], rootDefs: [], suffixes: [], suffixDefs: [] }
+    astronomy: { prefixes: [], prefixDefs: [], roots: [], rootDefs: [], suffixes: [], suffixDefs: [] },
+    fantasy: { prefixes: [], prefixDefs: [], roots: [], rootDefs: [], suffixes: [], suffixDefs: [] }
 };
 
 // Function to parse CSV content
@@ -198,6 +199,16 @@ function generateSentenceDefinition(type, preDef, rootDef1, rootDef2, sufDef, su
             case 'orbital': return `orbiting ${root}`;
             case 'explosive': return `explosive ${root}`;
             case 'sun-related': return `solar ${root}`;
+            case 'magical': return `magical ${root}`;
+            case 'elf-related': return `elven ${root}`;
+            case 'dragon-related': return `draconic ${root}`;
+            case 'mythical': return `mythical ${root}`;
+            case 'mysterious': return `mysterious ${root}`;
+            case 'fairy-related': return `fairy-like ${root}`;
+            case 'dark': return `dark ${root}`;
+            case 'bright': return `bright ${root}`;
+            case 'ethereal': return `ethereal ${root}`;
+            case 'runic': return `runic ${root}`;
             default: return `${root} involving ${pre}`;
         }
     };
@@ -246,6 +257,8 @@ function generateSentenceDefinition(type, preDef, rootDef1, rootDef2, sufDef, su
                 case 'extreme': definition = `The most extreme form of ${preRoot}`; break;
                 case 'agent': definition = `A person performing ${preRoot}`; break;
                 case 'nature': definition = `The nature of ${preRoot}`; break;
+                case 'realm': definition = `A kingdom of ${preRoot}`; break;
+                case 'connection': definition = `A bond of ${preRoot}`; break;
                 default: definition = `Something characterized by ${preRoot}`;
             }
             break;
@@ -286,6 +299,8 @@ function generateSentenceDefinition(type, preDef, rootDef1, rootDef2, sufDef, su
                 case 'extreme': definition = `The most extreme form of ${root}`; break;
                 case 'agent': definition = `A person performing ${root}`; break;
                 case 'nature': definition = `The nature of ${root}`; break;
+                case 'realm': definition = `A kingdom of ${root}`; break;
+                case 'connection': definition = `A bond of ${root}`; break;
                 default: definition = `Something characterized by ${root}`;
             }
             break;
