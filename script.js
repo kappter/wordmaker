@@ -19,27 +19,28 @@ const suffixes = [
 ];
 
 const prefixDefs = [
-    "not", "against", "between", "within", "outside", "beyond", "not", "equal", 
-    "feet", "hands", "two", "before", "sound", "eight", "fire", "skin", 
-    "excessive", "below", "for", "sight", "after", "feeling", "middle", 
-    "self", "different", "in", "across", "under", "above", "air", 
-    "earth", "time"
+    "negation", "opposition", "connection", "internal", "external", "additional", 
+    "absence", "equality", "feet", "hands", "double", "prior", "sound", "eight", 
+    "fire", "skin", "excess", "deficiency", "support", "vision", "subsequent", 
+    "emotion", "center", "self", "difference", "inclusion", "movement", 
+    "subordination", "superiority", "air", "earth", "time"
 ];
 const rootDefs = [
     "breaking", "hearing", "speaking", "throwing", "mother", "harm", "death", 
-    "voice", "love", "many", "judgment", "writing", "heat", "geeks", "violins", 
-    "disgust", "glass", "deity", "pork", "grumpiness", "death", "happiness", 
-    "joy", "danger", "humans", "fish", "medicine", "insanity", "shortness", 
-    "witches", "redheads", "light", "vision", "belief", "life", "water", 
-    "land", "greatness", "flowers", "stars", "wind", "shattering", "dinosaurs", 
-    "everything", "secrets", "energy", "clouds", "sparkle", "rhythm", "breath"
+    "voice", "love", "multiplicity", "judgment", "writing", "heat", "geeks", 
+    "violins", "disgust", "glass", "deity", "pork", "grumpiness", "death", 
+    "happiness", "joy", "danger", "humans", "fish", "medicine", "insanity", 
+    "shortness", "witches", "redheads", "light", "vision", "belief", "life", 
+    "water", "land", "greatness", "flowers", "stars", "wind", "shattering", 
+    "dinosaurs", "everything", "secrets", "energy", "clouds", "sparkle", 
+    "rhythm", "breath"
 ];
 const suffixDefs = [
-    "in a manner", "study of", "holding", "full of", "quality", "female", 
-    "related to", "of", "capable", "disease", "decomposition", "fear", "love", 
-    "action", "most", "specialist", "like", "result", "resident", "having", 
-    "to make", "process", "pertaining to", "act", "state", "place", "styled", 
-    "abundant"
+    "manner", "study", "containment", "abundance", "quality", "female", 
+    "relation", "origin", "capability", "disease", "decomposition", "fear", 
+    "affection", "action", "extreme", "expert", "resemblance", "outcome", 
+    "inhabitant", "possession", "creation", "process", "association", 
+    "performance", "condition", "location", "style", "fullness"
 ];
 
 const wordContainer = document.getElementById('wordContainer');
@@ -74,35 +75,36 @@ function getPartOfSpeech(type, suffixIndex) {
     return 'noun';
 }
 
-// Enhanced definition generator with natural language
+// Enhanced definition generator with natural language, avoiding word parts
 function generateSentenceDefinition(type, preDef, rootDef1, rootDef2, sufDef, suffixIndex) {
     let definition = '';
     const partOfSpeech = getPartOfSpeech(type, suffixIndex);
 
-    // Helper to combine prefix and root naturally
+    // Helper to combine prefix and root meanings without using word parts
     const combinePreRoot = (pre, root) => {
         if (!pre) return root;
         switch (pre) {
-            case 'not': return `non-${root}`;
-            case 'against': return `opposing ${root}`;
-            case 'between': return `shared ${root}`;
-            case 'within': return `internal ${root}`;
-            case 'outside': return `external ${root}`;
-            case 'beyond': return `extra ${root}`;
-            case 'equal': return `balanced ${root}`;
-            case 'before': return `pre-${root}`;
-            case 'after': return `post-${root}`;
-            case 'excessive': return `overly ${root}`;
-            case 'below': return `under ${root}`;
-            case 'for': return `supporting ${root}`;
-            case 'middle': return `mid-${root}`;
-            case 'self': return `self-${root}`;
-            case 'different': return `unique ${root}`;
-            case 'in': return `inner ${root}`;
-            case 'across': return `trans-${root}`;
-            case 'under': return `sub-${root}`;
-            case 'above': return `super-${root}`;
-            default: return `${pre}-${root}`;
+            case 'negation': return `absence of ${root}`;
+            case 'opposition': return `resistance to ${root}`;
+            case 'connection': return `link between ${root}`;
+            case 'internal': return `inner ${root}`;
+            case 'external': return `outer ${root}`;
+            case 'additional': return `extra ${root}`;
+            case 'absence': return `lack of ${root}`;
+            case 'equality': return `balanced ${root}`;
+            case 'prior': return `earlier ${root}`;
+            case 'subsequent': return `later ${root}`;
+            case 'excess': return `excessive ${root}`;
+            case 'deficiency': return `insufficient ${root}`;
+            case 'support': return `promotion of ${root}`;
+            case 'center': return `central ${root}`;
+            case 'self': return `personal ${root}`;
+            case 'difference': return `distinct ${root}`;
+            case 'inclusion': return `contained ${root}`;
+            case 'movement': return `transferred ${root}`;
+            case 'subordination': return `lesser ${root}`;
+            case 'superiority': return `greater ${root}`;
+            default: return `${root} involving ${pre}`;
         }
     };
 
@@ -116,69 +118,71 @@ function generateSentenceDefinition(type, preDef, rootDef1, rootDef2, sufDef, su
         case 'pre-root-suf':
             const preRoot = combinePreRoot(preDef, normalizeRoot(rootDef1));
             switch (sufDef) {
-                case 'study of': definition = `The study of ${preRoot}`; break;
-                case 'fear': definition = `Fear of ${preRoot}`; break;
-                case 'love': definition = `Love for ${preRoot}`; break;
-                case 'specialist': definition = `A specialist in ${preRoot}`; break;
-                case 'in a manner': definition = `In a ${preRoot} manner`; break;
-                case 'full of': definition = `Full of ${preRoot}`; break;
-                case 'quality': definition = `The quality of ${preRoot}`; break;
-                case 'to make': definition = `To cause ${preRoot}`; break;
-                case 'process': definition = `The process of ${preRoot}`; break;
-                case 'action': definition = `The act of ${preRoot}`; break;
-                case 'state': definition = `The state of ${preRoot}`; break;
-                case 'place': definition = `A place for ${preRoot}`; break;
-                case 'like': definition = `Resembling ${preRoot}`; break;
-                case 'abundant': definition = `Abounding in ${preRoot}`; break;
-                case 'related to': definition = `Related to ${preRoot}`; break;
-                case 'pertaining to': definition = `Pertaining to ${preRoot}`; break;
-                case 'holding': definition = `The holding of ${preRoot}`; break;
-                case 'female': definition = `A female associated with ${preRoot}`; break;
-                case 'of': definition = `Belonging to ${preRoot}`; break;
-                case 'capable': definition = `Capable of ${preRoot}`; break;
-                case 'disease': definition = `A disease involving ${preRoot}`; break;
-                case 'decomposition': definition = `Something that decomposes ${preRoot}`; break;
-                case 'resident': definition = `A resident of ${preRoot}`; break;
-                case 'having': definition = `Having ${preRoot}`; break;
-                case 'act': definition = `The act of ${preRoot}`; break;
-                case 'styled': definition = `Styled like ${preRoot}`; break;
-                default: definition = `Something involving ${preRoot}`;
+                case 'study': definition = `The academic study of ${preRoot}`; break;
+                case 'fear': definition = `An intense fear of ${preRoot}`; break;
+                case 'affection': definition = `A strong affection for ${preRoot}`; break;
+                case 'expert': definition = `A person specializing in ${preRoot}`; break;
+                case 'manner': definition = `A way characterized by ${preRoot}`; break;
+                case 'abundance': definition = `Filled with ${preRoot}`; break;
+                case 'quality': definition = `The characteristic of ${preRoot}`; break;
+                case 'creation': definition = `The act of creating ${preRoot}`; break;
+                case 'process': definition = `The process involving ${preRoot}`; break;
+                case 'action': definition = `The activity of ${preRoot}`; break;
+                case 'condition': definition = `The state of ${preRoot}`; break;
+                case 'location': definition = `A place characterized by ${preRoot}`; break;
+                case 'style': definition = `A style resembling ${preRoot}`; break;
+                case 'fullness': definition = `Abundance of ${preRoot}`; break;
+                case 'relation': definition = `Something related to ${preRoot}`; break;
+                case 'association': definition = `Something associated with ${preRoot}`; break;
+                case 'containment': definition = `The containment of ${preRoot}`; break;
+                case 'female': definition = `A female connected to ${preRoot}`; break;
+                case 'origin': definition = `Something originating from ${preRoot}`; break;
+                case 'capability': definition = `The ability to perform ${preRoot}`; break;
+                case 'disease': definition = `A disorder related to ${preRoot}`; break;
+                case 'decomposition': definition = `A substance that breaks down ${preRoot}`; break;
+                case 'inhabitant': definition = `A resident associated with ${preRoot}`; break;
+                case 'possession': definition = `Possessing ${preRoot}`; break;
+                case 'performance': definition = `The performance of ${preRoot}`; break;
+                case 'resemblance': definition = `Something resembling ${preRoot}`; break;
+                case 'outcome': definition = `The result of ${preRoot}`; break;
+                default: definition = `Something characterized by ${preRoot}`;
             }
             break;
         case 'root-suf':
             const root = normalizeRoot(rootDef1);
             switch (sufDef) {
-                case 'study of': definition = `The study of ${root}`; break;
-                case 'fear': definition = `Fear of ${root}`; break;
-                case 'love': definition = `Love for ${root}`; break;
-                case 'specialist': definition = `A specialist in ${root}`; break;
-                case 'in a manner': definition = `In a ${root} manner`; break;
-                case 'full of': definition = `Full of ${root}`; break;
-                case 'quality': definition = `The quality of ${root}`; break;
-                case 'to make': definition = `To cause ${root}`; break;
-                case 'process': definition = `The process of ${root}`; break;
-                case 'action': definition = `The act of ${root}`; break;
-                case 'state': definition = `The state of ${root}`; break;
-                case 'place': definition = `A place for ${root}`; break;
-                case 'like': definition = `Resembling ${root}`; break;
-                case 'abundant': definition = `Abounding in ${root}`; break;
-                case 'related to': definition = `Related to ${root}`; break;
-                case 'pertaining to': definition = `Pertaining to ${root}`; break;
-                case 'holding': definition = `The holding of ${root}`; break;
-                case 'female': definition = `A female associated with ${root}`; break;
-                case 'of': definition = `Belonging to ${root}`; break;
-                case 'capable': definition = `Capable of ${root}`; break;
-                case 'disease': definition = `A disease involving ${root}`; break;
-                case 'decomposition': definition = `Something that decomposes ${root}`; break;
-                case 'resident': definition = `A resident of ${root}`; break;
-                case 'having': definition = `Having ${root}`; break;
-                case 'act': definition = `The act of ${root}`; break;
-                case 'styled': definition = `Styled like ${root}`; break;
-                default: definition = `Something involving ${root}`;
+                case 'study': definition = `The academic study of ${root}`; break;
+                case 'fear': definition = `An intense fear of ${root}`; break;
+                case 'affection': definition = `A strong affection for ${root}`; break;
+                case 'expert': definition = `A person specializing in ${root}`; break;
+                case 'manner': definition = `A way characterized by ${root}`; break;
+                case 'abundance': definition = `Filled with ${root}`; break;
+                case 'quality': definition = `The characteristic of ${root}`; break;
+                case 'creation': definition = `The act of creating ${root}`; break;
+                case 'process': definition = `The process involving ${root}`; break;
+                case 'action': definition = `The activity of ${root}`; break;
+                case 'condition': definition = `The state of ${root}`; break;
+                case 'location': definition = `A place characterized by ${root}`; break;
+                case 'style': definition = `A style resembling ${root}`; break;
+                case 'fullness': definition = `Abundance of ${root}`; break;
+                case 'relation': definition = `Something related to ${root}`; break;
+                case 'association': definition = `Something associated with ${root}`; break;
+                case 'containment': definition = `The containment of ${root}`; break;
+                case 'female': definition = `A female connected to ${root}`; break;
+                case 'origin': definition = `Something originating from ${root}`; break;
+                case 'capability': definition = `The ability to perform ${root}`; break;
+                case 'disease': definition = `A disorder related to ${root}`; break;
+                case 'decomposition': definition = `A substance that breaks down ${root}`; break;
+                case 'inhabitant': definition = `A resident associated with ${root}`; break;
+                case 'possession': definition = `Possessing ${root}`; break;
+                case 'performance': definition = `The performance of ${root}`; break;
+                case 'resemblance': definition = `Something resembling ${root}`; break;
+                case 'outcome': definition = `The result of ${root}`; break;
+                default: definition = `Something characterized by ${root}`;
             }
             break;
         case 'pre-root':
-            definition = `Something that is ${combinePreRoot(preDef, normalizeRoot(rootDef1))}`;
+            definition = `Something characterized by ${combinePreRoot(preDef, normalizeRoot(rootDef1))}`;
             break;
         case 'pre-root-root':
             definition = `Something combining ${combinePreRoot(preDef, normalizeRoot(rootDef1))} and ${normalizeRoot(rootDef2)}`;
@@ -187,7 +191,7 @@ function generateSentenceDefinition(type, preDef, rootDef1, rootDef2, sufDef, su
             definition = `The concept of ${normalizeRoot(rootDef1)}`;
             break;
         default:
-            definition = `Something involving ${combinePreRoot(preDef, normalizeRoot(rootDef1))}`;
+            definition = `Something characterized by ${combinePreRoot(preDef, normalizeRoot(rootDef1))}`;
     }
 
     return `${partOfSpeech.charAt(0).toUpperCase() + partOfSpeech.slice(1)}: ${definition}`;
