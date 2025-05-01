@@ -29,6 +29,9 @@ function parseCSV(csvText) {
 
 // Function to load and organize data from word_parts.csv
 async function loadWordParts() {
+    const loadingElement = document.getElementById('loading');
+    loadingElement.classList.remove('hidden'); // Show loading indicator
+
     try {
         console.log('Fetching word_parts.csv...');
         const response = await fetch('data/word_parts.csv');
@@ -83,6 +86,8 @@ async function loadWordParts() {
     } catch (error) {
         console.error('Error loading word parts:', error);
         alert('Failed to load word parts data. Please check data/word_parts.csv.');
+    } finally {
+        loadingElement.classList.add('hidden'); // Hide loading indicator
     }
 }
 
