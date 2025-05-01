@@ -1,47 +1,87 @@
-// Theme-specific word parts
+// Themes object (will be populated dynamically from CSV)
 const themes = {
-    normal: {
-        prefixes: ["un", "anti", "inter", "intra", "exter", "extra", "non", "iso", "ped", "mani"],
-        prefixDefs: ["negation", "opposition", "connection", "internal", "external", "additional", "absence", "equality", "feet", "hands"],
-        roots: ["fract", "aud", "dict", "ject", "mater", "mal", "mort", "voc", "phil", "jud"],
-        rootDefs: ["breaking", "hearing", "speaking", "throwing", "mother", "harm", "death", "voice", "love", "judgment"],
-        suffixes: ["ly", "ology", "ous", "ity", "ess", "al", "an", "ile", "ist", "ize"],
-        suffixDefs: ["manner", "study", "abundance", "quality", "female", "relation", "origin", "capability", "expert", "creation"]
-    },
-    technical: {
-        prefixes: ["cyber", "nano", "bio", "techno", "info", "electro", "mech", "auto", "data", "quant"],
-        prefixDefs: ["digital", "microscopic", "biological", "technological", "informational", "electrical", "mechanical", "automatic", "data-related", "quantitative"],
-        roots: ["comp", "crypt", "sys", "algor", "net", "code", "mod", "opt", "scan", "tech"],
-        rootDefs: ["computation", "encryption", "systems", "algorithms", "networks", "programming", "models", "optimization", "scanning", "technology"],
-        suffixes: ["ics", "ism", "ation", "metry", "logy", "oid", "ist", "ize", "ance", "ence"],
-        suffixDefs: ["science", "belief", "process", "measurement", "study", "resemblance", "expert", "creation", "performance", "condition"]
-    },
-    shakespearian: {
-        prefixes: ["oer", "for", "be", "mis", "yon", "thither", "hence", "ere", "with", "a"],
-        prefixDefs: ["over", "away", "covered", "wrong", "distant", "toward", "away", "before", "together", "apart"],
-        roots: ["gild", "mirth", "woe", "bard", "quoth", "fain", "rue", "vow", "glee", "knave"],
-        rootDefs: ["adornment", "merriment", "sorrow", "poetry", "speech", "desire", "regret", "oath", "joy", "villainy"],
-        suffixes: ["th", "est", "ing", "ard", "ly", "ous", "ful", "ment", "ure", "ance"],
-        suffixDefs: ["action", "extreme", "action", "character", "manner", "abundance", "fullness", "outcome", "structure", "performance"]
-    },
-    popculture: {
-        prefixes: ["mega", "ultra", "hyper", "neo", "retro", "pop", "trend", "viral", "meme", "fandom"],
-        prefixDefs: ["massive", "extreme", "excess", "new", "nostalgic", "popular", "fashionable", "spreading", "humorous", "fanatic"],
-        roots: ["vibe", "hype", "trend", "ship", "stan", "flick", "jam", "meme", "icon", "bling"],
-        rootDefs: ["atmosphere", "excitement", "fashion", "relationship", "admiration", "film", "music", "humor", "symbol", "glamour"],
-        suffixes: ["ify", "ism", "ology", "er", "ist", "ous", "ity", "esque", "ation", "ful"],
-        suffixDefs: ["creation", "belief", "study", "agent", "expert", "abundance", "quality", "style", "process", "fullness"]
-    },
-    astronomy: {
-        prefixes: ["astro", "cosmo", "galact", "stella", "luna", "solar", "neb", "orbit", "nova", "helio"],
-        prefixDefs: ["stellar", "cosmic", "galactic", "starry", "lunar", "solar", "nebulous", "orbital", "explosive", "sun-related"],
-        roots: ["star", "planet", "moon", "nebula", "comet", "orbit", "grav", "lume", "nova", "void"],
-        rootDefs: ["stars", "planets", "moons", "clouds", "comets", "orbits", "gravity", "illumination", "explosions", "emptiness"],
-        suffixes: ["oid", "ism", "ology", "ic", "al", "ar", "ous", "ity", "ence", "arium"],
-        suffixDefs: ["resemblance", "belief", "study", "association", "relation", "nature", "abundance", "quality", "condition", "location"]
-    }
+    normal: { prefixes: [], prefixDefs: [], roots: [], rootDefs: [], suffixes: [], suffixDefs: [] },
+    technical: { prefixes: [], prefixDefs: [], roots: [], rootDefs: [], suffixes: [], suffixDefs: [] },
+    shakespearian: { prefixes: [], prefixDefs: [], roots: [], rootDefs: [], suffixes: [], suffixDefs: [] },
+    popculture: { prefixes: [], prefixDefs: [], roots: [], rootDefs: [], suffixes: [], suffixDefs: [] },
+    astronomy: { prefixes: [], prefixDefs: [], roots: [], rootDefs: [], suffixes: [], suffixDefs: [] }
 };
 
+// Function to parse CSV content
+function parseCSV(csvText) {
+    const lines = csvText.trim().split('\n');
+    const headers = lines[0].split(',').map(h => h.trim());
+    const result = [];
+
+    for (let i = 1; i < lines.length; i++) {
+        const values = lines[i].split(',').map(v => v.trim());
+        if (values.length === headers.length && values.every(v => v !== '')) {
+            const entry = {};
+            headers.forEach((header, index) => {
+                entry[header] = values[index];
+            });
+            result.push(entry);
+        }
+    }
+
+    return result;
+}
+
+// Function to load and organize data from word_parts.csv
+async function loadWordParts() {
+    try {
+        const response = await fetch('data/word_parts.csv');
+        if (!response.ok) {
+            throw new Error('Failed to load word_parts.csv');
+        }
+        const csvText = await response.text();
+        const data = parseCSV(csvText);
+
+        // Clear existing theme data
+        Object.keys(themes).forEach(theme => {
+            themes[theme].prefixes = [];
+            themes[theme].prefixDefs = [];
+            themes[theme].roots = [];
+            themes[theme].rootDefs = [];
+            themes[theme].suffixes = [];
+            themes[theme].suffixDefs = [];
+        });
+
+        // Populate themes based on type and part
+        data.forEach(({ type, part, term, definition }) => {
+            if (themes[type]) {
+                if (part === 'prefix') {
+                    themes[type].prefixes.push(term);
+                    themes[type].prefixDefs.push(definition);
+                } else if (part === 'root') {
+                    themes[type].roots.push(term);
+                    themes[type].rootDefs.push(definition);
+                } else if (part === 'suffix') {
+                    themes[type].suffixes.push(term);
+                    themes[type].suffixDefs.push(definition);
+                }
+            }
+        });
+
+        // Validate that all themes have data
+        Object.keys(themes).forEach(theme => {
+            if (!themes[theme].prefixes.length || !themes[theme].roots.length || !themes[theme].suffixes.length) {
+                console.warn(`Theme ${theme} is missing some word parts.`);
+            }
+        });
+    } catch (error) {
+        console.error('Error loading word parts:', error);
+        alert('Failed to load word parts data. Please check data/word_parts.csv.');
+    }
+}
+
+// Load data on startup
+async function initializeThemes() {
+    await loadWordParts();
+    updateDisplay(); // Generate initial word after data is loaded
+}
+
+// DOM elements
 const wordContainer = document.getElementById('wordContainer');
 const generatedWord = document.getElementById('generatedWord');
 const pronunciation = document.getElementById('pronunciation');
@@ -251,6 +291,9 @@ function generateSentenceDefinition(type, preDef, rootDef1, rootDef2, sufDef, su
 
 function generateWordAndDefinition(type, theme) {
     const themeData = themes[theme];
+    if (!themeData.prefixes.length || !themeData.roots.length || !themeData.suffixes.length) {
+        return { word: 'Error', def: 'Error: Theme data not loaded', x: -1, y: -1, z: -1, y2: -1 };
+    }
     let word, def, x, y, z, y2;
     x = Math.floor(Math.random() * themeData.prefixes.length);
     y = Math.floor(Math.random() * themeData.roots.length);
@@ -293,7 +336,9 @@ function generatePermutations(x, y, z, y2, currentType, theme) {
     types.forEach(type => {
         if (type !== currentType) {
             const { word, def } = generateWordAndDefinition(type, theme);
-            permutations.push(`<strong>${word}</strong>: ${def}`);
+            if (word !== 'Error') {
+                permutations.push(`<strong>${word}</strong>: ${def}`);
+            }
         }
     });
 
@@ -334,10 +379,11 @@ function updateDisplay() {
     }, 100);
 }
 
+// Event listeners
 generateButton.addEventListener('click', updateDisplay);
 copyButton.addEventListener('click', copyToClipboard);
 permutationType.addEventListener('change', updateDisplay);
 themeType.addEventListener('change', updateDisplay);
 
-// Generate a word on page load
-updateDisplay();
+// Initialize themes and generate first word
+initializeThemes();

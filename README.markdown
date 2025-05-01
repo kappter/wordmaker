@@ -16,6 +16,7 @@ WordMaker is a fun and interactive web application that generates unique words b
   - **Shakespearian**: Archaic, poetic words (e.g., `oer-mirth-ful` → "Adjective: Filled with excessive merriment")
   - **Pop Culture**: Trendy, modern terms (e.g., `viral-meme-ify` → "Verb: The act of creating viral humor")
   - **Astronomy**: Space-themed words (e.g., `astro-star-oid` → "Noun: Something resembling star-related stars")
+- **Single CSV Data Source**: Word parts (prefixes, roots, suffixes) and their definitions are loaded from a single `data/word_parts.csv` file, with a `type` column to categorize themes, allowing easy expansion by editing one file.
 - **Natural Definitions**: Definitions are clear, avoid repeating word parts, and include the part of speech (e.g., "Noun: The academic study of absence of breaking" for `non-fract-ology`).
 - **Pronunciation Guide**: Each word includes a simple pronunciation (e.g., `\un-_a_-fract-_o_-logy\`).
 - **Alternative Forms**: Displays other possible word forms using different combinations of the same parts.
@@ -36,12 +37,18 @@ Check out the live demo at [https://kappter.github.io/wordmaker/](https://kappte
    cd wordmaker
    ```
 
-2. **Open the App**:
-   - Open `index.html` in a modern web browser (e.g., Chrome, Firefox, Edge).
-   - No server or dependencies are required, as the app uses CDN-hosted Tailwind CSS and pure JavaScript.
+2. **Add Data File**:
+   - Ensure the `data/` folder contains `word_parts.csv`.
+   - The CSV file should have four columns: `type` (theme name), `part` (prefix, root, suffix), `term` (word part), `definition` (meaning). Example:
+     ```csv
+     type,part,term,definition
+     normal,prefix,un,negation
+     normal,root,fract,breaking
+     normal,suffix,ology,study
+     ```
 
-3. **Optional: Host Locally**:
-   - Use a local server for testing (e.g., with Python):
+3. **Open the App**:
+   - Serve the app locally using a web server (required for Fetch API to load CSV file):
      ```bash
      python -m http.server 8000
      ```
@@ -61,20 +68,55 @@ Check out the live demo at [https://kappter.github.io/wordmaker/](https://kappte
 4. **Copy the Word**:
    - Click the "Copy Word" button to copy the word, pronunciation, and definition to your clipboard.
 
-5. **Explore**:
-   - Switch themes or word types to experiment with different word styles.
-   - Hover over the word container for a subtle scale animation.
-   - View alternative forms under "Other Forms" to see variations of the word.
+5. **Expand Data**:
+   - Add new terms by editing `data/word_parts.csv` in a text editor or spreadsheet software.
+   - For a new theme, add rows with a new `type` value and update `script.js` and `index.html` to include it.
 
 ## Project Structure
 
 ```
 wordmaker/
-├── index.html        # Main HTML file with the app structure
-├── styles.css        # Custom CSS for earth-tone styling and animations
-├── script.js         # JavaScript for word generation, themes, and interactivity
-└── README.md         # Project documentation
+├── data/
+│   ├── word_parts.csv           # Single CSV file with all word parts and definitions
+├── index.html                   # Main HTML file with the app structure
+├── styles.css                   # Custom CSS for earth-tone styling and animations
+├── script.js                    # JavaScript for word generation, themes, and interactivity
+└── README.md                    # Project documentation
 ```
+
+## Adding New Terms
+
+To expand the data:
+
+1. **Edit `word_parts.csv`**:
+   - Open `data/word_parts.csv` in a text editor or spreadsheet software.
+   - Add new rows with `type,part,term,definition`. Example:
+     ```csv
+     normal,prefix,super,superior
+     normal,root,vid,vision
+     normal,suffix,able,capability
+     ```
+   - Save and reload the app.
+
+2. **Add a New Theme**:
+   - Add rows to `word_parts.csv` with a new `type` (e.g., `fantasy`):
+     ```csv
+     fantasy,prefix,magi,magical
+     fantasy,root,myth,legend
+     fantasy,suffix,ic,association
+     ```
+   - Update `script.js` to add the new theme to the `themes` object:
+     ```javascript
+     const themes = {
+         // ... other themes ...
+         fantasy: { prefixes: [], prefixDefs: [], roots: [], rootDefs: [], suffixes: [], suffixDefs: [] }
+     };
+     ```
+   - Update the theme dropdown in `index.html`:
+     ```html
+     <option value="fantasy">Fantasy</option>
+     ```
+   - Reload the app to use the new theme.
 
 ## Contributing
 
@@ -89,13 +131,17 @@ Contributions are welcome! To contribute:
    ```
 
 3. **Make Changes**:
-   - Add new themes or word parts in `script.js`.
+   - Add new terms or themes to `data/word_parts.csv`.
    - Enhance the UI in `index.html` or `styles.css`.
    - Improve definition logic or add features in `script.js`.
 
 4. **Test Locally**:
    - Ensure the app works in multiple browsers.
    - Verify that definitions remain clear and avoid word parts.
+   - Test with a local server:
+     ```bash
+     python -m http.server 8000
+     ```
 
 5. **Submit a Pull Request**:
    - Push your changes to your fork:
@@ -112,7 +158,7 @@ This project is proprietary. You may use and modify it for personal use, but red
 
 ## Contact
 
-For questions, suggestions, or feedback, open an issue on the [GitHub repository](https://github.com/kappter/wordmaker) or contact the maintainer at [your contact info, if desired].
+For questions, suggestions, or feedback, open an issue on the [GitHub repository](https://github.com/kappter/wordmaker).
 
 ---
 
