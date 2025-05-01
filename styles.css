@@ -3,16 +3,19 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     font-family: 'Times New Roman', Times, serif;
 }
 
-.container {
-    flex: 1;
+header {
+    width: 100%;
+    padding: 1rem;
 }
 
 #wordContainer {
+    width: 90%;
+    margin: 0 auto;
     transition: transform 0.3s ease, opacity 0.3s ease;
     border-left: 4px solid #8b4513;
     background-color: #fff8e1;
@@ -46,10 +49,6 @@ body {
     color: #3c2f2f;
 }
 
-#wordDefinition::before {
-    content: ""; /* Removed "Definition: " to avoid redundancy */
-}
-
 #permutationList li {
     margin-bottom: 0.5rem;
     font-size: 0.95rem;
@@ -67,4 +66,21 @@ footer {
     border-top: 1px solid #d2b48c;
     width: 100%;
     background-color: #fff8e1;
+    text-align: center;
+    padding: 1rem 0;
+    margin-top: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+    body {
+        padding: 0.5rem;
+    }
+    #wordContainer {
+        width: 100%;
+        padding: 1rem;
+    }
+    header {
+        padding: 0.5rem;
+    }
 }
