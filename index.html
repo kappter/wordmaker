@@ -82,11 +82,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WordMaker</title>
-    <base href="/wordmaker/">
     <link rel="icon" href="data:,">
-    <link rel="stylesheet" href="css/output.css">
-    <link rel="stylesheet" href="css/styles.css">
-    <!-- Temporary inline styles for testing -->
+    <link rel="stylesheet" href="https://kappter.github.io/wordmaker/css/output.css">
+    <link rel="stylesheet" href="https://kappter.github.io/wordmaker/css/styles.css">
+    <!-- Temporary inline styles (can be removed once external CSS works) -->
     <style>
         body {
             background: linear-gradient(to bottom right, #f5f5dc, #d2b48c) !important;
@@ -144,6 +143,38 @@
             text-align: center !important;
         }
     </style>
+    <script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+            return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+            if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+                try {
+                    var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                    var firstSheetName = workbook.SheetNames[0];
+                    var worksheet = workbook.Sheets[firstSheetName];
+                    var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                    var filteredData = jsonData.filter(row => row.some(filledCell));
+                    var headerRowIndex = filteredData.findIndex((row, index) =>
+                        row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                    );
+                    if (headerRowIndex === -1 || headerRowIndex > 25) {
+                        headerRowIndex = 0;
+                    }
+                    var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
+                    csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                    return csv;
+                } catch (e) {
+                    console.error(e);
+                    return "";
+                }
+            }
+            return gk_fileData[filename] || "";
+        }
+    </script>
 </head>
 <body class="font-sans">
     <header class="bg-amber-500 text-white p-4 text-center">
