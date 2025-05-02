@@ -84,6 +84,9 @@ function parseCSV(csvText) {
 // Themes object (will be populated dynamically from CSV)
 const themes = {};
 
+// Promise to track when themes are loaded
+let themesLoadedPromise = null;
+
 // Function to load and organize data from word_parts.csv
 async function loadWordParts() {
     const loadingElement = document.getElementById('loading');
@@ -97,7 +100,7 @@ async function loadWordParts() {
             throw new Error(`Failed to load word_parts.csv: ${response.status} ${response.statusText}`);
         }
         const csvText = await response.text();
-        // console.log('CSV Text:', csvText); // Optional: Log CSV text for debugging
+        console.log('CSV Text:', csvText); // Log CSV text for debugging
         const data = parseCSV(csvText);
         console.log(`Parsed ${data.length} valid entries from CSV.`);
 
@@ -158,8 +161,25 @@ async function loadWordParts() {
     }
 }
 
+// Function to wait for themes to be loaded
+function waitForThemes() {
+    if (!themesLoadedPromise) {
+        themesLoadedPromise = new Promise((resolve) => {
+            const checkThemes = setInterval(() => {
+                if (Object.keys(themes).length > 0) {
+                    clearInterval(checkThemes);
+                    resolve();
+                }
+            }, 100);
+        });
+    }
+    return themesLoadedPromise;
+}
+
 // Function to populate theme dropdown dynamically
-function populateThemeDropdown() {
+async function populateThemeDropdown() {
+    await waitForThemes();
+
     const themeType = document.getElementById("themeType");
     if (!themeType) {
         console.error("Theme dropdown element not found!");
@@ -339,7 +359,9 @@ function generateSentenceDefinition(type, preDef, rootDef1, rootDef2, sufDef, su
 }
 
 // Function to update the display with the generated word
-function updateDisplay() {
+async function updateDisplay() {
+    await waitForThemes();
+
     const wordContainer = document.getElementById('wordContainer');
     const generatedWordEl = document.getElementById('generatedWord');
     const pronunciationEl = document.getElementById('pronunciation');
@@ -356,15 +378,6 @@ function updateDisplay() {
     const selectedTheme = themeType.value;
 
     console.log(`Generating word with type: ${selectedWordType}, theme: ${selectedTheme}`);
-
-    // Check if themes object is populated
-    if (Object.keys(themes).length === 0 && selectedTheme !== 'all') {
-        console.warn("Themes not loaded yet, cannot generate word.");
-        generatedWordEl.textContent = "Loading...";
-        pronunciationEl.textContent = "";
-        wordDefinitionEl.textContent = "Please wait for data to load.";
-        return;
-    }
 
     const { word, definition, pronunciation } = generateWordAndDefinition(selectedWordType, selectedTheme);
 
@@ -430,6 +443,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Load data and initialize
     await loadWordParts();
-    populateThemeDropdown();
-    updateDisplay(); // Initial word generation
+    await populateThemeDropdown();
+    await updateDisplay(); // Initial word generation
 });
