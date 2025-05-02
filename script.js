@@ -338,7 +338,6 @@ function generateSentenceDefinition(type, preDef, rootDef1, rootDef2, sufDef, su
     return definition.charAt(0).toUpperCase() + definition.slice(1); // Capitalize first letter
 }
 
-
 // Function to update the display with the generated word
 function updateDisplay() {
     const wordContainer = document.getElementById('wordContainer');
@@ -434,4 +433,3 @@ document.addEventListener('DOMContentLoaded', async () => {
     populateThemeDropdown();
     updateDisplay(); // Initial word generation
 });
-
