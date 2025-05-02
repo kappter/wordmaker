@@ -42,35 +42,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Word Creator</title>
+    <title>Word Creator Game</title>
     <link rel="icon" href="data:,">
-    <!-- Link to a serif font -->
+    <!-- Reuse the serif font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
-    <!-- Link to the new CSS file -->
+    <!-- Reuse the existing CSS file -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Word Creator</h1>
+    <h1>Word Creator Game</h1>
 
     <div id="loading" class="loading-indicator">Loading word parts...</div>
 
     <main>
-        <div class="controls">
+        <!-- Theme Selection Screen -->
+        <div id="themeSelection" class="controls">
             <div>
-                <label for="permutationType">Select Word Type:</label>
-                <select id="permutationType">
-                    <option value="pre-root-suf">Prefix-Root-Suffix</option>
-                    <option value="root-suf">Root-Suffix</option>
-                    <option value="pre-root">Prefix-Root</option>
-                    <option value="pre-root-root">Prefix-Root-Root</option>
-                    <option value="root">Root Only</option>
-                </select>
-            </div>
-            <div>
-                <label for="themeType">Select Theme:</label>
-                <select id="themeType">
+                <label for="gameThemeType">Select Theme:</label>
+                <select id="gameThemeType">
                     <option value="normal">Normal</option>
                     <option value="technical">Technical</option>
                     <option value="shakespearian">Shakespearian</option>
@@ -79,26 +70,42 @@
                     <option value="fantasy">Fantasy</option>
                 </select>
             </div>
+            <button id="startButton" class="btn btn-generate">Start Game</button>
         </div>
 
-        <div id="wordContainer">
-            <h2 id="generatedWord"></h2>
-            <p id="pronunciation"></p>
-            <p id="wordDefinition"></p>
-            <div>
-                <h3 id="otherFormsHeading">Other Forms:</h3>
-                <ul id="permutationList"></ul>
+        <!-- Game Area (hidden initially) -->
+        <div id="gameArea" style="display: none;">
+            <div id="wordContainer">
+                <p id="questionNumber">Question 1 of 5</p>
+                <p id="score">Score: 0</p>
+                <p id="misses">Misses: 0/3</p>
+                <p id="wordDefinition" class="definition"></p>
+                <div id="options" class="options">
+                    <!-- Options will be populated by JS -->
+                </div>
+                <p id="feedback" class="feedback"></p>
+            </div>
+            <div class="buttons">
+                <button id="nextButton" class="btn btn-generate" style="display: none;">Next Question</button>
             </div>
         </div>
 
-        <div class="buttons">
-            <button id="generateButton" class="btn btn-generate">Generate New Word</button>
-            <button id="copyButton" class="btn btn-copy">Copy Word</button>
-            <a href="game.html"><button class="btn btn-play">Play Game</button></a>
+        <!-- Game Over Screen (hidden initially) -->
+        <div id="gameOver" style="display: none;">
+            <div id="wordContainer">
+                <h2>Game Over!</h2>
+                <p id="finalScore"></p>
+                <div class="buttons">
+                    <a href="index.html"><button class="btn btn-copy">Back to Word Creator</button></a>
+                    <button id="restartButton" class="btn btn-generate">Play Again</button>
+                </div>
+            </div>
         </div>
     </main>
 
-    <!-- Link to the existing script file -->
+    <!-- Include script.js for shared functions -->
     <script src="script.js"></script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9399103d29221d6a',t:'MTc0NjIwNTEwNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+    <!-- Link to the game script -->
+    <script src="game.js"></script>
+</body>
 </html>
